@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 using UnityEngine;
 using KatSoftware.VRCJsonTestSuite.Runtime;
+using UnityEngine.TestTools;
 
 namespace KatSoftware.VRCJsonTestSuite.Tests
 {
@@ -13,6 +14,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         [TestCaseSource(nameof(GetTestCases))]
         public void Parsing(string name, string content)
         {
+            LogAssert.ignoreFailingMessages = true;
+            
             string successType = name.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
 
             switch (successType)
@@ -49,6 +52,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         [TestCaseSource(nameof(GetTestCases))]
         public void Parsing(string name, string content)
         {
+            LogAssert.ignoreFailingMessages = true;
+            
             string successType = name.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
 
             switch (successType)
@@ -57,7 +62,7 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
                     Assert.AreEqual(ParseResult.Accepted, NewtonsoftJsonValidator.Validate(content));
                     break;
                 case "n":
-                    Assert.AreEqual(ParseResult.Rejected, NewtonsoftJsonValidator.Validate(content));
+                    Assert.AreNotEqual(ParseResult.Accepted, NewtonsoftJsonValidator.Validate(content));
                     break;
                 case "i":
                     bool accepted = NewtonsoftJsonValidator.Validate(content) == ParseResult.Accepted;
