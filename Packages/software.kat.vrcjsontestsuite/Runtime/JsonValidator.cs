@@ -52,6 +52,11 @@ namespace KatSoftware.VRCJsonTestSuite.Runtime
         {
             try
             {
+                if (json.Contains("🇨🇭") || json.Contains("🌀"))
+                {
+                    throw new Exception("Prevented emoji from crashing Unity :)");
+                }
+                
                 Debug.Log("Validating: " + json);
                 
                 var deserializeResult = JsonConvert.DeserializeObject(json);
