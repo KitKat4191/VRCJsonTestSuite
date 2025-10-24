@@ -1,0 +1,3 @@
+[submodule "Packages/software.kat.vrcjsontestsuite/Resources/JSONTestSuite"]
+	path = Packages/software.kat.vrcjsontestsuite/Resources/JSONTestSuite
+	url = https://github.com/nst/JSONTestSuite
