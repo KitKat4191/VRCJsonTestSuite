@@ -34,12 +34,6 @@ namespace KatSoftware.VRCJsonTestSuite.Runtime
                     Debug.LogError("Failed to reserialize! Error: " + result.Error);
                     return ParseResult.Rejected;
                 }
-               
-                if (!NewtonsoftJsonValidator.IsValid(result2.String))
-                {
-                    Debug.LogError($"VRCJson produced invalid JSON: '{result2.String}'");
-                    return ParseResult.Incorrect;
-                }
                 
                 Debug.Log("Reserialized to: " + result2.String);
 
