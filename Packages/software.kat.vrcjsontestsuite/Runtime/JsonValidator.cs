@@ -35,7 +35,7 @@ namespace KatSoftware.VRCJsonTestSuite.Runtime
                     return ParseResult.Rejected;
                 }
                
-                if (NewtonsoftJsonValidator.IsValid(result2.String))
+                if (!NewtonsoftJsonValidator.IsValid(result2.String))
                 {
                     Debug.LogError($"VRCJson produced invalid JSON: '{result2.String}'");
                     return ParseResult.Incorrect;
