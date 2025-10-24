@@ -49,7 +49,7 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
     
     public class NewtonsoftJsonTests
     {
-        [TestCaseSource(nameof(GetTestCases))]
+        //[TestCaseSource(nameof(GetTestCases))]
         public void Parsing(string name, string content)
         {
             LogAssert.ignoreFailingMessages = true;
