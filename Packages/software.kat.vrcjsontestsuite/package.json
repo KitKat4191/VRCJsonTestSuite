@@ -1,0 +1,26 @@
+{
+  "name": "software.kat.vrcjsontestsuite",
+  "version": "0.0.1",
+  "type": "tool",
+  "displayName": "VRCJson Test Suite",
+  "description": "This makes me sad.",
+  "author": {
+    "name": "KatSoftware",
+    "email": "contact@kat.software",
+    "url": "https://github.com/kat-software"
+  },
+  "unity": "2019.4",
+  "unityRelease": "31f1",
+  "dependencies": {
+    "com.livedimensions.vrrefassist": "1.0.0"
+  },
+  "vpmDependencies": {
+    "com.livedimensions.vrrefassist": "1.0.0"
+  },
+  "keywords": [
+    "katsoftware",
+    "vrcjson",
+    "json",
+    "tests"
+  ]
+}

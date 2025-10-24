@@ -1,0 +1,18 @@
+{
+    "name": "KatSoftware.VRCJsonTestSuite.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1ddc7d674de96924aaefb5756071e53c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
