@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/software.kat.vrcjsontestsuite/Editor/Windows/VRCJsonTestWindow.uss?fileID=7433441132597879392&amp;guid=689832cb298150549b9f4870fa52fb53&amp;type=3#VRCJsonTestWindow" />
+    <ui:Label text="Hello World! From UXML" name="title-text" />
+</ui:UXML>
