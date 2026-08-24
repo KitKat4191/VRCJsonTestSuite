@@ -2,7 +2,8 @@
     "name": "KatSoftware.VRCJsonTestSuite.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:1ddc7d674de96924aaefb5756071e53c"
+        "GUID:1ddc7d674de96924aaefb5756071e53c",
+        "GUID:287140b543679694a8b03e8376ce1fd8"
     ],
     "includePlatforms": [
         "Editor"
