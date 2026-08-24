@@ -1,87 +1,117 @@
 
 using System;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
 using UnityEngine;
-using KatSoftware.VRCJsonTestSuite.Runtime;
 using UnityEngine.TestTools;
+
+using KatSoftware.VRCJsonTestSuite.Runtime;
 
 namespace KatSoftware.VRCJsonTestSuite.Tests
 {
-    public class VRCJsonTests
+    public enum TestResult
     {
-        [TestCaseSource(nameof(GetTestCases))]
-        public void Parsing(string name, string content)
+        ExpectedResult,
+        ShouldSucceedButFailed,
+        ShouldFailButSucceeded,
+        UndefinedSucceeded,
+        UndefinedFailed,
+        ParserCrashed
+    }
+    
+    public static class TestCaseProvider
+    {
+        private const string _PARSING_TESTS_PATH = "JSONTestSuite/test_parsing";
+        
+        public static object[] GetTestCases(string path = _PARSING_TESTS_PATH)
         {
-            LogAssert.ignoreFailingMessages = true;
+            TextAsset[] assets = Resources.LoadAll<TextAsset>(path);
             
-            string successType = name.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
+            Debug.Log($"{assets.Length} JSON Tests Loaded!");
 
-            switch (successType)
-            {
-                case "y":
-                    Assert.AreEqual(ParseResult.Accepted, VRCJsonValidator.Validate(content));
-                    break;
-                case "n":
-                    Assert.AreEqual(ParseResult.Rejected, VRCJsonValidator.Validate(content));
-                    break;
-                case "i":
-                    bool accepted = VRCJsonValidator.Validate(content) == ParseResult.Accepted;
-                    Debug.Log($"Parser {(accepted ? "accepted" : "rejected")} undefined case '{name}'");
-                    Assert.True(accepted);
-                    break;
-                default:
-                    Assert.True(false);
-                    break;
-            }
-        }
-
-        public static object[] GetTestCases()
-        {
-            TextAsset[] assets = Resources.LoadAll<TextAsset>("JSONTestSuite/test_parsing");
-            
-            Debug.Log("Text assets loaded: " + assets.Length);
-
+            // ReSharper disable once CoVariantArrayConversion
             return assets.Select(x => new object[] { x.name, x.text }).ToArray();
         }
     }
-    
-    public class NewtonsoftJsonTests
-    {
-        //[TestCaseSource(nameof(GetTestCases))]
-        public void Parsing(string name, string content)
-        {
-            LogAssert.ignoreFailingMessages = true;
-            
-            string successType = name.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
 
-            switch (successType)
+    public abstract class JsonTester
+    {
+        // This is required or else TestCaseSource won't find it.
+        public static object[] GetTestCases() => TestCaseProvider.GetTestCases();
+        
+        public static TestResult RunTest(JsonValidator validator, string testName, string testJson)
+        {
+            string successType = testName.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
+
+            bool success;
+            
+            try
             {
-                case "y":
-                    Assert.AreEqual(ParseResult.Accepted, NewtonsoftJsonValidator.Validate(content));
+                success = validator.TryParse(testJson);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return TestResult.ParserCrashed;
+            }
+
+            return successType switch
+            {
+                "y" => success ? TestResult.ExpectedResult : TestResult.ShouldSucceedButFailed,
+                "n" => success ? TestResult.ShouldFailButSucceeded : TestResult.ExpectedResult,
+                "i" => success ? TestResult.UndefinedSucceeded : TestResult.UndefinedFailed,
+                _ => throw new InvalidDataException("Undefined success type: " + successType)
+            };
+        }
+
+        protected static void HandleAssertions(TestResult result, string testName)
+        {
+            switch (result)
+            {
+                case TestResult.ExpectedResult:
+                    Assert.Pass(result.ToString());
                     break;
-                case "n":
-                    Assert.AreNotEqual(ParseResult.Accepted, NewtonsoftJsonValidator.Validate(content));
+                case TestResult.ShouldSucceedButFailed:
+                case TestResult.ShouldFailButSucceeded:
+                    Assert.Fail(result.ToString());
                     break;
-                case "i":
-                    bool accepted = NewtonsoftJsonValidator.Validate(content) == ParseResult.Accepted;
-                    Debug.Log($"Parser {(accepted ? "accepted" : "rejected")} undefined case '{name}'");
-                    Assert.True(accepted);
+                case TestResult.UndefinedSucceeded:
+                case TestResult.UndefinedFailed:
+                    Assert.Ignore($"Parser {(result == TestResult.UndefinedSucceeded ? "accepted" : "rejected")} undefined test '{testName}'");
+                    break;
+                case TestResult.ParserCrashed:
+                    Assert.Fail("Exception!");
                     break;
                 default:
-                    Assert.True(false);
+                    Assert.Ignore("Undefined TestResult: " + result);
                     break;
             }
         }
-
-        public static object[] GetTestCases()
+    }
+    
+    public class VRCJsonTests : JsonTester
+    {
+        [TestCaseSource(nameof(GetTestCases))]
+        public void Parsing(string testName, string testJson)
         {
-            TextAsset[] assets = Resources.LoadAll<TextAsset>("JSONTestSuite/test_parsing");
-            
-            Debug.Log("Text assets loaded: " + assets.Length);
+            LogAssert.ignoreFailingMessages = true;
 
-            return assets.Select(x => new object[] { x.name, x.text }).ToArray();
+            TestResult result = RunTest(new VRCJsonValidator(), testName, testJson);
+            HandleAssertions(result, testName);
+        }
+    }
+    
+    public class NewtonsoftJsonTests : JsonTester
+    {
+        [TestCaseSource(nameof(GetTestCases))]
+        public void Parsing(string testName, string testJson)
+        {
+            LogAssert.ignoreFailingMessages = true;
+
+            TestResult result = RunTest(new NewtonsoftJsonValidator(), testName, testJson);
+            HandleAssertions(result, testName);
         }
     }
 }
