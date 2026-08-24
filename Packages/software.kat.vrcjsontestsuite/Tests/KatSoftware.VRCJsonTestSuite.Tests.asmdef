@@ -4,7 +4,9 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "KatSoftware.VRCJsonTestSuite.Runtime"
+        "KatSoftware.VRCJsonTestSuite.Runtime",
+        "UdonSharp.Runtime",
+        "KatSoftware.VRCJsonTestSuite.EditorOnly"
     ],
     "includePlatforms": [
         "Editor"
