@@ -42,7 +42,7 @@
     border-top-color: rgb(60, 60, 60);
     border-bottom-color: rgb(60, 60, 60);
     background-color: rgb(42, 42, 42);
-    margin-left: 16px;
+    margin-left: 7px;
 }
 
 .toggle:checked > VisualElement > #unity-checkmark {
