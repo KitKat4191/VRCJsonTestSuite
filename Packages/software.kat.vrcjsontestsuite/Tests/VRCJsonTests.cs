@@ -26,7 +26,7 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
     
     public static class TestCaseProvider
     {
-        private const string _PARSING_TESTS_PATH = "JSONTestSuite/test_parsing";
+        private const string _PARSING_TESTS_PATH = "test_parsing";
         
         public static object[] GetTestCases(string path = _PARSING_TESTS_PATH)
         {
