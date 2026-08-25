@@ -22,4 +22,4 @@ Download the `.unitypackage` from the [latest release](https://github.com/KitKat
 
 <img src="https://raw.githubusercontent.com/KitKat4191/VRCJsonTestSuite/refs/heads/master/Unity_fggAA7dXXU.png" width="343">
 
-To use the test runner, you first have to open your Unity project's `manifes.json` and add `"testables" : ["software.kat.vrcjsontestsuite"]`.
+To use the test runner, you first have to open your Unity project's `manifes.json` and add `"testables" : ["software.kat.vrcjsontestsuite"]`
