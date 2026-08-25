@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/software.kat.vrcjsontestsuite/Editor/Windows/VRCJsonTestWindow.uss?fileID=7433441132597879392&amp;guid=689832cb298150549b9f4870fa52fb53&amp;type=3#VRCJsonTestWindow" />
+    <ui:VisualElement name="list-element" style="flex-grow: 1; flex-direction: row; justify-content: center; height: 30px; max-height: 30px; min-height: 30px; align-items: stretch; margin-top: 2px; margin-bottom: 2px;">
+        <ui:VisualElement name="left-element" class="textBackground" style="flex-grow: 1; flex-basis: 1%; flex-direction: row-reverse; margin-right: 2px;">
+            <ui:VisualElement name="result-1" class="square" style="flex-grow: 1; background-color: rgb(255, 0, 0); flex-direction: row-reverse;" />
+            <ui:Label tabindex="-1" text="n_object_lone_continuation_byte_in_key_and_trailing_comma.json" parse-escape-sequences="true" display-tooltip-when-elided="true" name="test-name-text" class="text" style="align-items: flex-end; justify-content: center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="right-element" class="textBackground" style="flex-grow: 1; flex-basis: 1%; flex-direction: row; margin-left: 2px;">
+            <ui:VisualElement name="result-2" class="square" style="flex-grow: 1; background-color: rgb(107, 255, 0);" />
+            <ui:Label tabindex="-1" text="[0.4e0066999999999999999999999999999(...)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="test-value-text" class="text" style="justify-content: center;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
