@@ -1,5 +1,5 @@
 # VRCJson Test Suite
-A Unity Editor Window and test runner.
+A Unity Editor Window and test runner. Based on <https://github.com/nst/JSONTestSuite>
 
 <img src="https://raw.githubusercontent.com/KitKat4191/VRCJsonTestSuite/refs/heads/master/Unity_Yg2emLTwFv.png" width="512">
 
