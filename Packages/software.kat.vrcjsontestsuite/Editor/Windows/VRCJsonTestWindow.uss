@@ -27,3 +27,33 @@
 .textBackground {
     background-color: rgb(42, 42, 42);
 }
+
+.button:hover {
+    background-color: rgb(103, 103, 103);
+}
+
+.toggle > VisualElement > #unity-checkmark {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-left-color: rgb(60, 60, 60);
+    border-right-color: rgb(60, 60, 60);
+    border-top-color: rgb(60, 60, 60);
+    border-bottom-color: rgb(60, 60, 60);
+    background-color: rgb(42, 42, 42);
+    margin-left: 16px;
+}
+
+.toggle:checked > VisualElement > #unity-checkmark {
+    background-color: rgb(137, 192, 217);
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
+}
+
+.toggle {
+    background-color: rgb(88, 88, 88);
+}
+
+.toggle:hover {
+    background-color: rgb(103, 103, 103);
+}
