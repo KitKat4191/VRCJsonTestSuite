@@ -28,6 +28,7 @@ namespace KatSoftware.VRCJsonTestSuite.Editor.Windows
         
         private bool _hideExpected;
         private bool _hideUndefined;
+        private bool _diff;
         
         private ListView _listView;
         private Label _elementCount;
@@ -40,11 +41,14 @@ namespace KatSoftware.VRCJsonTestSuite.Editor.Windows
             _filteredItems.Clear();
             _filteredItems.AddRange(_items);
             if (_hideExpected)
-                _filteredItems = _filteredItems.Where(x => x.Item4 != TestResult.ExpectedResult).ToList();
+                _filteredItems = _filteredItems.Where(x => x.Item4 != TestResult.CorrectFail && x.Item4 != TestResult.CorrectSuccess).ToList();
 
             if (_hideUndefined)
                 _filteredItems = _filteredItems.Where(x =>
                     x.Item4 is not (TestResult.UndefinedFailed or TestResult.UndefinedSucceeded)).ToList();
+            
+            if (_diff)
+                _filteredItems = _filteredItems.Where(x => x.Item2 != x.Item4).ToList();
         }
 
         private void HandleUpdatedGUI()
@@ -79,6 +83,14 @@ namespace KatSoftware.VRCJsonTestSuite.Editor.Windows
                 HandleUpdatedGUI();
             });
             toggleUndefined.value = false;
+
+            var diffToggle = root.Q<Toggle>("diff-toggle");
+            diffToggle.RegisterValueChangedCallback(evt =>
+            {
+                _diff = evt.newValue;
+                HandleUpdatedGUI();
+            });
+            diffToggle.value = false;
             
             var runTestsButton = root.Q<Button>("run-tests-button");
             runTestsButton.clicked += RunTests;
@@ -110,10 +122,12 @@ namespace KatSoftware.VRCJsonTestSuite.Editor.Windows
                 if (testJson.Length > 36)
                     testJson = testJson[..36] + "(...)";
                 
-                TestResult newtonsoft = JsonTester.RunTest(new NewtonsoftJsonValidator(), testName, testJson, out string newtonsoftInfo);
-                TestResult vrcjson = JsonTester.RunTest(new VRCJsonValidator(), testName, testJson, out string vrcJsonInfo);
+                TestResult newtonsoftResult = JsonTester.RunTest(new NewtonsoftJsonValidator(), testName, testJson, out string newtonsoftInfo);
+                newtonsoftInfo = $"{GetDebugText(newtonsoftResult)}\n{newtonsoftInfo}";
+                TestResult vrcjsonResult = JsonTester.RunTest(new VRCJsonValidator(), testName, testJson, out string vrcJsonInfo);
+                vrcJsonInfo = $"{GetDebugText(vrcjsonResult)}\n{vrcJsonInfo}";
 
-                _items.Add((testName, newtonsoft, newtonsoftInfo, vrcjson, vrcJsonInfo, testJson));
+                _items.Add((testName, newtonsoftResult, newtonsoftInfo, vrcjsonResult, vrcJsonInfo, testJson));
             }
 
             HandleUpdatedGUI();
@@ -137,11 +151,27 @@ namespace KatSoftware.VRCJsonTestSuite.Editor.Windows
             testValueText.text = _filteredItems[index].Item6;
         }
 
+        private string GetDebugText(TestResult testResult)
+        {
+            return testResult switch
+            {
+                TestResult.CorrectFail => "Expected rejected and it was rejected.",
+                TestResult.CorrectSuccess => "Expected accepted and it was accepted.",
+                TestResult.ShouldSucceedButFailed => "Expected accepted but got rejected!",
+                TestResult.ShouldFailButSucceeded => "Expected rejected but got accepted!",
+                TestResult.UndefinedSucceeded => "Undefined case was accepted by the parser.",
+                TestResult.UndefinedFailed => "Undefined case was rejected by the parser.",
+                TestResult.ParserCrashed => "The parser crashed!",
+                _ => throw new ArgumentOutOfRangeException(nameof(testResult), testResult, null)
+            };
+        }
+
         private Color GetColor(TestResult testResult)
         {
             return testResult switch
             {
-                TestResult.ExpectedResult => _green,
+                TestResult.CorrectFail => _green,
+                TestResult.CorrectSuccess => _green,
                 TestResult.ShouldSucceedButFailed => _orange,
                 TestResult.ShouldFailButSucceeded => _yellow,
                 TestResult.UndefinedSucceeded => _lightBlue,
