@@ -34,6 +34,16 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
             // ReSharper disable once CoVariantArrayConversion
             return assets.Select(x => new object[] { x.name, x.text }).ToArray();
         }
+        
+        public static (string, string)[] GetTestCasesTuple(string path = _PARSING_TESTS_PATH)
+        {
+            TextAsset[] assets = Resources.LoadAll<TextAsset>(path);
+            
+            Debug.Log($"{assets.Length} JSON Tests Loaded!");
+
+            // ReSharper disable once CoVariantArrayConversion
+            return assets.Select(x => (x.name, x.text)).ToArray();
+        }
     }
 
     public abstract class JsonTester
