@@ -1,4 +1,6 @@
 
+//#define KAT_DO_LOGGING
+
 using System;
 using System.IO;
 using System.Linq;
@@ -29,7 +31,9 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         {
             TextAsset[] assets = Resources.LoadAll<TextAsset>(path);
             
+#if KAT_DO_LOGGING
             Debug.Log($"{assets.Length} JSON Tests Loaded!");
+#endif
 
             // ReSharper disable once CoVariantArrayConversion
             return assets.Select(x => new object[] { x.name, x.text }).ToArray();
@@ -39,7 +43,9 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         {
             TextAsset[] assets = Resources.LoadAll<TextAsset>(path);
             
+#if KAT_DO_LOGGING
             Debug.Log($"{assets.Length} JSON Tests Loaded!");
+#endif
 
             // ReSharper disable once CoVariantArrayConversion
             return assets.Select(x => (x.name, x.text)).ToArray();
@@ -51,19 +57,23 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         // This is required or else TestCaseSource won't find it.
         public static object[] GetTestCases() => TestCaseProvider.GetTestCases();
         
-        public static TestResult RunTest(JsonValidator validator, string testName, string testJson)
+        public static TestResult RunTest(JsonValidator validator, string testName, string testJson, out string info)
         {
+            info = "";
             string successType = testName.Split("_", StringSplitOptions.RemoveEmptyEntries)[0];
 
             bool success;
             
             try
             {
-                success = validator.TryParse(testJson);
+                success = validator.TryParse(testJson, out info);
             }
             catch (Exception e)
             {
+                info = e.Message;
+#if KAT_DO_LOGGING
                 Debug.LogException(e);
+#endif
                 return TestResult.ParserCrashed;
             }
 
@@ -76,23 +86,23 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
             };
         }
 
-        protected static void HandleAssertions(TestResult result, string testName)
+        protected static void HandleAssertions(TestResult result, string testName, string info)
         {
             switch (result)
             {
                 case TestResult.ExpectedResult:
-                    Assert.Pass(result.ToString());
+                    Assert.Pass(info);
                     break;
                 case TestResult.ShouldSucceedButFailed:
                 case TestResult.ShouldFailButSucceeded:
-                    Assert.Fail(result.ToString());
+                    Assert.Fail(info);
                     break;
                 case TestResult.UndefinedSucceeded:
                 case TestResult.UndefinedFailed:
-                    Assert.Ignore($"Parser {(result == TestResult.UndefinedSucceeded ? "accepted" : "rejected")} undefined test '{testName}'");
+                    Assert.Ignore($"Parser {(result == TestResult.UndefinedSucceeded ? "accepted" : "rejected")} undefined test '{testName}'\n" + info);
                     break;
                 case TestResult.ParserCrashed:
-                    Assert.Fail("Exception!");
+                    Assert.Fail(info);
                     break;
                 default:
                     Assert.Ignore("Undefined TestResult: " + result);
@@ -108,8 +118,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         {
             LogAssert.ignoreFailingMessages = true;
 
-            TestResult result = RunTest(new VRCJsonValidator(), testName, testJson);
-            HandleAssertions(result, testName);
+            TestResult result = RunTest(new VRCJsonValidator(), testName, testJson, out string info);
+            HandleAssertions(result, testName, info);
         }
     }
     
@@ -120,8 +130,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         {
             LogAssert.ignoreFailingMessages = true;
 
-            TestResult result = RunTest(new NewtonsoftJsonValidator(), testName, testJson);
-            HandleAssertions(result, testName);
+            TestResult result = RunTest(new NewtonsoftJsonValidator(), testName, testJson, out string info);
+            HandleAssertions(result, testName, info);
         }
     }
 }
