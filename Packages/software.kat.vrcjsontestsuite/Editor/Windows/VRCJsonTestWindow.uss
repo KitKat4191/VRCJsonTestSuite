@@ -1,0 +1,29 @@
+.text {
+    color: rgb(210, 210, 210);
+}
+
+.button {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: rgb(88, 88, 88);
+    border-left-color: rgb(48, 48, 48);
+    border-right-color: rgb(48, 48, 48);
+    border-top-color: rgb(48, 48, 48);
+    border-bottom-color: rgb(48, 48, 48);
+    -unity-font-style: bold;
+}
+
+.square {
+    max-width: 30px;
+    max-height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+.textBackground {
+    background-color: rgb(42, 42, 42);
+}
