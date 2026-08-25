@@ -15,7 +15,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
 {
     public enum TestResult
     {
-        ExpectedResult,
+        CorrectFail,
+        CorrectSuccess,
         ShouldSucceedButFailed,
         ShouldFailButSucceeded,
         UndefinedSucceeded,
@@ -79,8 +80,8 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
 
             return successType switch
             {
-                "y" => success ? TestResult.ExpectedResult : TestResult.ShouldSucceedButFailed,
-                "n" => success ? TestResult.ShouldFailButSucceeded : TestResult.ExpectedResult,
+                "y" => success ? TestResult.CorrectSuccess : TestResult.ShouldSucceedButFailed,
+                "n" => success ? TestResult.ShouldFailButSucceeded : TestResult.CorrectFail,
                 "i" => success ? TestResult.UndefinedSucceeded : TestResult.UndefinedFailed,
                 _ => throw new InvalidDataException("Undefined success type: " + successType)
             };
@@ -90,15 +91,16 @@ namespace KatSoftware.VRCJsonTestSuite.Tests
         {
             switch (result)
             {
-                case TestResult.ExpectedResult:
+                case TestResult.CorrectFail:
+                case TestResult.CorrectSuccess:
                     Assert.Pass(info);
                     break;
                 case TestResult.ShouldSucceedButFailed:
                 case TestResult.ShouldFailButSucceeded:
                     Assert.Fail(info);
                     break;
-                case TestResult.UndefinedSucceeded:
                 case TestResult.UndefinedFailed:
+                case TestResult.UndefinedSucceeded:
                     Assert.Ignore($"Parser {(result == TestResult.UndefinedSucceeded ? "accepted" : "rejected")} undefined test '{testName}'\n" + info);
                     break;
                 case TestResult.ParserCrashed:
