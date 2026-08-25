@@ -1,9 +1,9 @@
 {
   "name": "software.kat.vrcjsontestsuite",
-  "version": "0.0.1",
+  "version": "1.0.0-dev.1",
   "type": "tool",
   "displayName": "VRCJson Test Suite",
-  "description": "This makes me sad.",
+  "description": "A Unity Editor VRCJson tester",
   "author": {
     "name": "KatSoftware",
     "email": "contact@kat.software",
